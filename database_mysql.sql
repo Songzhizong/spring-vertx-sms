@@ -74,7 +74,7 @@ CREATE TABLE `vx_sms_template_provider`
   `provider_template` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  NOT NULL,
   `template_id`       bigint                                                  NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_id_code` (`template_id`,`provider_code`) USING BTREE
+  UNIQUE KEY `uk_code_tid` (`provider_code`,`template_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC COMMENT='服务提供方短信模板';
 
 SET
