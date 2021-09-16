@@ -20,7 +20,7 @@
     </encoder>
   </appender>
 
-  <logger name="com.zzsong" level="error" additivity="false">
+  <logger name="com.zzsong" level="debug" additivity="false">
     <appender-ref ref="CONSOLE"/>
   </logger>
   <root level="info">

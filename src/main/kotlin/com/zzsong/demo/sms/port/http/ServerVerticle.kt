@@ -77,7 +77,7 @@ class ServerVerticle : CoroutineVerticle() {
       }
 
     // 基准测试
-    router.post("/benchmark")
+    router.route("/benchmark")
       .handler(BodyHandler.create())
       .handler { ctx ->
         val handler = CoroutineExceptionHandler { _, e -> ctx.exceptionHandler(e) }
