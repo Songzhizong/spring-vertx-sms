@@ -1,0 +1,26 @@
+### 新建短信模板
+POST http://127.0.0.1:8888/template
+Content-Type: application/json
+
+{
+  "code": "SMS_PHONE_CODE",
+  "name": "短信验证码",
+  "description": "短信验证码",
+  "params": [
+    {
+      "param": "code",
+      "description": "短信验证码"
+    }
+  ]
+}
+
+### 添加服务提供商短信模板信息
+POST http://127.0.0.1:8888/template/provider
+Content-Type: application/json
+
+{
+  "templateId": 269812346833076224,
+  "providerCode": "ali_yun",
+  "providerTemplate": "SMS_201125008",
+  "content": "验证码${code}，您正在进行身份验证，打死不要告诉别人哦！"
+}

@@ -1,0 +1,32 @@
+logging:
+  config: classpath:logback-spring-dev.xml
+
+server:
+  port: 8888
+
+spring:
+  application:
+    name: SPRING-VERTX-SMS
+  main:
+    # 阻止SpringBoot自动装配webflux
+    web-application-type: none
+  profiles:
+    active: local
+
+ideal:
+  snowflake:
+    factory-type: fixed
+    data-center-id: 0
+    machine-id: 0
+
+sms:
+  datasource:
+    # mysql://{username}:{password}@{mysql_host}:{mysql_port}/{database_name}
+    url: "mysql://username:password@127.0.0.1:3306/vertx-demo?useUnicode=true&characterEncoding=utf-8&useAffectedRows=true&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&failOverReadOnly=false"
+  provider:
+    enabled: ali_yun
+    # 阿里云短信网关配置信息
+    ali-yun:
+      sign-name: 短信签名
+      access-key-id: access_key
+      access-secret: access_secret

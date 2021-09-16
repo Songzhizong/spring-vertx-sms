@@ -1,0 +1,38 @@
+### 发送短信
+POST http://127.0.0.1:8888/sms/send
+Content-Type: application/json
+
+{
+  "templateCode": "SMS_PHONE_CODE",
+  "mobiles": [
+    "18888888888"
+  ],
+  "params": {
+    "code": "8819"
+  }
+}
+
+### 批量发送短信
+POST http://127.0.0.1:8888/sms/send/batch
+Content-Type: application/json
+
+[
+  {
+    "templateCode": "SMS_PHONE_CODE",
+    "mobiles": [
+      "18866666666"
+    ],
+    "params": {
+      "code": "1234"
+    }
+  },
+  {
+    "templateCode": "SMS_PHONE_CODE",
+    "mobiles": [
+      "18888888888"
+    ],
+    "params": {
+      "code": "5678"
+    }
+  }
+]
