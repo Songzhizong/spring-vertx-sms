@@ -42,9 +42,7 @@ class AliYunSmsProvider(
     log.info("使用阿里云作为短信服务提供商")
   }
 
-  override fun getProviderCode(): String {
-    return PROVIDER_CODE
-  }
+  override fun getProviderCode() = PROVIDER_CODE
 
   override suspend fun send(sendRequest: SendRequest): List<SendResult> {
     val template = sendRequest.template

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author 宋志宗 on 2021/7/29
  */
-@Component("cloudSmsAliYunProperties")
+@Component
 @ConfigurationProperties("sms.provider.ali-yun")
 public class AliYunProperties {
   private String baseUrl = "https://dysmsapi.aliyuncs.com";

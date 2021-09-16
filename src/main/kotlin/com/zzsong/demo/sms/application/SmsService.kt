@@ -7,6 +7,7 @@ import com.zzsong.demo.sms.domain.model.template.ProviderTemplateDo
 import com.zzsong.demo.sms.domain.model.template.TemplateDomainService
 import com.zzsong.demo.sms.provider.SendRequest
 import com.zzsong.demo.sms.provider.SmsProvider
+import kotlinx.coroutines.delay
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 class SmsService(
+  @Suppress("SpringJavaInjectionPointsAutowiringInspection")
   private val smsProvider: SmsProvider,
   private val templateDomainService: TemplateDomainService
 ) {
@@ -33,6 +35,7 @@ class SmsService(
     val template: ProviderTemplateDo = templateDomainService
       .findProviderTemplate(templateCode)
       ?: kotlin.run {
+        delay(100)
         val providerCode = smsProvider.getProviderCode()
         log.warn("找不到短信模板配置信息: {} - {}", providerCode, templateCode)
         throw ResourceNotFoundException("找不到短信模板配置信息")

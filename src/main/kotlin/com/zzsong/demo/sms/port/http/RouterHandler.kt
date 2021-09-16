@@ -26,7 +26,7 @@ class RouterHandler(
    * @return 任务id
    * @author 宋志宗 on 2021/9/15
    */
-  suspend fun sendSms(ctx: RoutingContext): Result<Long> {
+  suspend fun sendSms(ctx: RoutingContext): Result<Void> {
     val bodyAsString = ctx.bodyAsString
     val args = bodyAsString.parseJson(SendSmsArgs::class)
     smsService.send(args)
@@ -39,7 +39,7 @@ class RouterHandler(
    * @return 任务id
    * @author 宋志宗 on 2021/9/15
    */
-  suspend fun batchSendSms(ctx: RoutingContext): Result<Long> {
+  suspend fun batchSendSms(ctx: RoutingContext): Result<Void> {
     val bodyAsString = ctx.bodyAsString
     val args = bodyAsString.parseJsonList(SendSmsArgs::class)
     smsService.send(args)
