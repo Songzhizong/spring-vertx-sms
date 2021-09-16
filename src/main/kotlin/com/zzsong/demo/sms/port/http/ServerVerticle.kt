@@ -66,6 +66,13 @@ class ServerVerticle : CoroutineVerticle() {
   override suspend fun start() {
     val router = Router.router(vertx)
 
+    router.route()
+      .handler { ctx ->
+        val startTime = System.currentTimeMillis()
+        ctx.put("startTime", startTime)
+        ctx.next()
+      }
+
     // 发送短信
     router.post("/sms/send")
       .handler(BodyHandler.create())
@@ -99,7 +106,15 @@ class ServerVerticle : CoroutineVerticle() {
 
   private fun RoutingContext.jsonResult(result: Result<*>) {
     response().putHeader("Content-Type", "application/json;charset=utf-8")
-    end(objectMapper.writeValueAsString(result))
+    val jsonString = objectMapper.writeValueAsString(result)
+    writeResponse(jsonString)
+  }
+
+  private fun RoutingContext.writeResponse(jsonString: String?) {
+    val startTime = get<Long>("startTime")
+    val uri = request().uri()
+    end(jsonString)
+    log.info("Request uri: {} 耗时 {}ms", uri, System.currentTimeMillis() - startTime)
   }
 
   private fun RoutingContext.exceptionHandler(throwable: Throwable) {

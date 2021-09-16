@@ -29,8 +29,8 @@ class RouterHandler(
   suspend fun sendSms(ctx: RoutingContext): Result<Long> {
     val bodyAsString = ctx.bodyAsString
     val args = bodyAsString.parseJson(SendSmsArgs::class)
-    val taskId = smsService.send(args)
-    return Result.data(taskId)
+    smsService.send(args)
+    return Result.success()
   }
 
   /**
@@ -42,8 +42,8 @@ class RouterHandler(
   suspend fun batchSendSms(ctx: RoutingContext): Result<Long> {
     val bodyAsString = ctx.bodyAsString
     val args = bodyAsString.parseJsonList(SendSmsArgs::class)
-    val taskId = smsService.send(args)
-    return Result.data(taskId)
+    smsService.send(args)
+    return Result.success()
   }
 
   /**

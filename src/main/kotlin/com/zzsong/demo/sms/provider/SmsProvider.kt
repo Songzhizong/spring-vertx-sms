@@ -19,8 +19,8 @@ interface SmsProvider {
 
   /** 发送短信, 不同短信内容群发 */
   suspend fun send(sendRequestList: List<SendRequest>): List<SendResult> {
-    val list = ArrayList<Deferred<List<SendResult>>>()
     return coroutineScope {
+      val list = ArrayList<Deferred<List<SendResult>>>()
       for (request in sendRequestList) {
         list.add(async { send(request) })
       }

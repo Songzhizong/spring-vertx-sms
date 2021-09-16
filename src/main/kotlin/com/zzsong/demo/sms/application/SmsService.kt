@@ -23,8 +23,10 @@ class SmsService(
     private val log: Logger = LoggerFactory.getLogger(SmsService::class.java)
   }
 
-  suspend fun send(args: SendSmsArgs): Long {
-    log.info("请求参数: {}", JsonUtils.toJsonString(args))
+  suspend fun send(args: SendSmsArgs) {
+    if (log.isDebugEnabled) {
+      log.debug("短信参数: {}", JsonUtils.toJsonString(args))
+    }
     val templateCode = args.templateCode
     val mobiles = args.mobiles
     val params = args.params
@@ -37,10 +39,9 @@ class SmsService(
       }
     val request = SendRequest(template, mobiles, params)
     smsProvider.send(request)
-    return 1
   }
 
-  suspend fun send(argsList: List<SendSmsArgs>): Long {
+  suspend fun send(argsList: List<SendSmsArgs>) {
     val sendRequestList = argsList
       .map { args ->
         val templateCode = args.templateCode
@@ -55,6 +56,5 @@ class SmsService(
         SendRequest(template, mobiles, params)
       }
     smsProvider.send(sendRequestList)
-    return 1
   }
 }

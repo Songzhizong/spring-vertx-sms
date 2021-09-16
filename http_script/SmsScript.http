@@ -3,7 +3,7 @@ POST http://127.0.0.1:8888/sms/send
 Content-Type: application/json
 
 {
-  "templateCode": "SMS_PHONE_CODE",
+  "templateCode": "SMS_PHONE_CODE1",
   "mobiles": [
     "18888888888"
   ],
