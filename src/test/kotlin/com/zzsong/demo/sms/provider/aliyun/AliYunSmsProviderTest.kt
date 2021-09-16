@@ -17,7 +17,7 @@ class AliYunSmsProviderTest {
   fun send() {
     val properties = AliYunProperties()
       .apply {
-        signName = "美丽友联"
+        signName = "短信签名"
         accessKeyId = "ak"
         accessSecret = "sk"
       }

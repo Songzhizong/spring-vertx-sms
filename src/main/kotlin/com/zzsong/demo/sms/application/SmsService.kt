@@ -31,7 +31,8 @@ class SmsService(
     val template: ProviderTemplateDo = templateDomainService
       .findProviderTemplate(templateCode)
       ?: kotlin.run {
-        log.error("找不到短信模板配置信息: {}", templateCode)
+        val providerCode = smsProvider.getProviderCode()
+        log.warn("找不到短信模板配置信息: {} - {}", providerCode, templateCode)
         throw ResourceNotFoundException("找不到短信模板配置信息")
       }
     val request = SendRequest(template, mobiles, params)
