@@ -1,21 +1,22 @@
 package com.zzsong.demo.sms.provider.benchmark
 
-import cn.idealframework.http.WebClients
 import cn.idealframework.util.Asserts
 import com.zzsong.demo.sms.infrastructure.await
 import com.zzsong.demo.sms.provider.SendRequest
 import com.zzsong.demo.sms.provider.SendResult
 import com.zzsong.demo.sms.provider.SmsProvider
-import io.vertx.core.Vertx
 import io.vertx.ext.web.client.WebClient
-import io.vertx.ext.web.client.WebClientOptions
 import io.vertx.kotlin.coroutines.await
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.MediaType
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.util.DefaultUriBuilderFactory
+import reactor.netty.http.client.HttpClient
+import reactor.netty.resources.ConnectionProvider
 import java.time.Duration
 
 /**
@@ -30,7 +31,7 @@ import java.time.Duration
   havingValue = BenchmarkSmsProvider.PROVIDER_CODE
 )
 class BenchmarkSmsProvider(
-  vertx: Vertx,
+  private val webClient: WebClient,
   private val benchmarkProperties: BenchmarkProperties
 ) : SmsProvider {
   companion object {
@@ -38,10 +39,22 @@ class BenchmarkSmsProvider(
     private val log: Logger = LoggerFactory.getLogger(BenchmarkSmsProvider::class.java)
   }
 
-  private val springWebClient = WebClients
-    .createWebClientBuilder(Duration.ofSeconds(5))
-    .build()
-  private val vertxWebClient = WebClient.create(vertx, WebClientOptions().setKeepAlive(true))
+  private val springWebClient: org.springframework.web.reactive.function.client.WebClient
+
+  init {
+    val httpClient = HttpClient
+      .create(ConnectionProvider.create("httpClient", 2048))
+      .responseTimeout(Duration.ofSeconds(5))
+      .keepAlive(true)
+    springWebClient = org.springframework.web.reactive.function.client.WebClient.builder()
+      .clientConnector(ReactorClientHttpConnector(httpClient))
+      .uriBuilderFactory(
+        DefaultUriBuilderFactory()
+          .apply {
+            encodingMode = DefaultUriBuilderFactory.EncodingMode.NONE
+          })
+      .build()
+  }
 
   override fun getProviderCode() = PROVIDER_CODE
 
@@ -78,7 +91,7 @@ class BenchmarkSmsProvider(
   }
 
   private suspend fun sendByVertxWebclient(body: Map<String, Any>, targetUrl: String) {
-    val response = vertxWebClient.postAbs(targetUrl).sendJson(body).await()
+    val response = webClient.postAbs(targetUrl).sendJson(body).await()
     log.debug("response: {}", response.bodyAsString())
   }
 

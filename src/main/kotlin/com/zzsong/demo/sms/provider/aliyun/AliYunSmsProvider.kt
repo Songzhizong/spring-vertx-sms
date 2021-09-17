@@ -1,6 +1,5 @@
 package com.zzsong.demo.sms.provider.aliyun
 
-import cn.idealframework.http.WebClients
 import com.zzsong.demo.sms.infrastructure.await
 import com.zzsong.demo.sms.infrastructure.parseJson
 import com.zzsong.demo.sms.provider.SendRequest
@@ -9,8 +8,12 @@ import com.zzsong.demo.sms.provider.SmsProvider
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.DefaultUriBuilderFactory
+import reactor.netty.http.client.HttpClient
+import reactor.netty.resources.ConnectionProvider
 import java.time.Duration
 
 /**
@@ -29,8 +32,13 @@ class AliYunSmsProvider(
     const val PROVIDER_CODE = "ali_yun"
     private val log: Logger = LoggerFactory.getLogger(AliYunSmsProvider::class.java)
     private const val SUCCESS_CODE = "OK"
-    private val webClient = WebClients
-      .createWebClientBuilder(Duration.ofSeconds(5))
+
+    private val httpClient = HttpClient
+      .create(ConnectionProvider.create("httpClient", 2048))
+      .responseTimeout(Duration.ofSeconds(5))
+      .keepAlive(true)
+    private val webClient = WebClient.builder()
+      .clientConnector(ReactorClientHttpConnector(httpClient))
       .uriBuilderFactory(DefaultUriBuilderFactory()
         .apply {
           encodingMode = DefaultUriBuilderFactory.EncodingMode.NONE
