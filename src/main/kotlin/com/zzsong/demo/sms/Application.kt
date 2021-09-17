@@ -6,11 +6,11 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 @EnableScheduling
 @SpringBootApplication
-class SpringVertxDemoApplication
+class Application
 
 fun main(args: Array<String>) {
   val availableProcessors = Runtime.getRuntime().availableProcessors()
   val ioWorkerCount = availableProcessors shl 1
   System.setProperty("reactor.netty.ioWorkerCount", ioWorkerCount.toString())
-  runApplication<SpringVertxDemoApplication>(*args)
+  runApplication<Application>(*args)
 }

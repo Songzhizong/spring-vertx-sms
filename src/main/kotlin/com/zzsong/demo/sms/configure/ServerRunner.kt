@@ -31,11 +31,12 @@ class ServerRunner(
 ) : ApplicationRunner, SmartInitializingSingleton {
 
   override fun run(args: ApplicationArguments?) {
-    val availableProcessors = Runtime.getRuntime().availableProcessors()
+    var instance = 0
+    vertx.nettyEventLoopGroup().forEach { _ -> instance++ }
     val config = JsonObject()
     config.put(ServerVerticle.SERVER_PORT_CONF, port)
     val options = DeploymentOptions()
-      .setInstances(availableProcessors.shl(1))
+      .setInstances(instance)
       .setConfig(config)
     vertx.deployVerticle(ServerVerticle::class.java, options)
   }

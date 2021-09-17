@@ -103,7 +103,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <mainClass>com.zzsong.demo.sms.SpringVertxDemoApplicationKt</mainClass>
+          <mainClass>com.zzsong.demo.sms.ApplicationKt</mainClass>
         </configuration>
         <executions>
           <execution>

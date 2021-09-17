@@ -1,16 +1,21 @@
 package com.zzsong.demo.sms.provider.benchmark
 
 import cn.idealframework.http.WebClients
+import cn.idealframework.util.Asserts
+import com.zzsong.demo.sms.infrastructure.await
 import com.zzsong.demo.sms.provider.SendRequest
 import com.zzsong.demo.sms.provider.SendResult
 import com.zzsong.demo.sms.provider.SmsProvider
 import io.vertx.core.Vertx
 import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.client.WebClientOptions
+import io.vertx.kotlin.coroutines.await
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.BodyInserters
 import java.time.Duration
 
 /**
@@ -24,7 +29,10 @@ import java.time.Duration
   name = ["enabled"],
   havingValue = BenchmarkSmsProvider.PROVIDER_CODE
 )
-class BenchmarkSmsProvider(vertx: Vertx) : SmsProvider {
+class BenchmarkSmsProvider(
+  vertx: Vertx,
+  private val benchmarkProperties: BenchmarkProperties
+) : SmsProvider {
   companion object {
     const val PROVIDER_CODE = "benchmark"
     private val log: Logger = LoggerFactory.getLogger(BenchmarkSmsProvider::class.java)
@@ -38,6 +46,48 @@ class BenchmarkSmsProvider(vertx: Vertx) : SmsProvider {
   override fun getProviderCode() = PROVIDER_CODE
 
   override suspend fun send(sendRequest: SendRequest): List<SendResult> {
-    TODO("Not yet implemented")
+    val template = sendRequest.template
+    val mobiles = sendRequest.mobiles
+    val params = sendRequest.params ?: emptyMap()
+    val content = formatContent(template.content, params)
+    val mobileStr = mobiles.joinToString(",")
+    val body = mapOf(
+      "template" to template.providerTemplate,
+      "mobiles" to mobileStr,
+      "params" to params
+    )
+    val targetUrl = benchmarkProperties.targetUrl
+    Asserts.notBlank(targetUrl, "Benchmark target url is blank")
+    when (benchmarkProperties.clientType) {
+      BenchmarkProperties.HttpClient.SPRING -> {
+        sendBySpringWebclient(body, targetUrl!!)
+      }
+      BenchmarkProperties.HttpClient.VERTX -> {
+        sendByVertxWebclient(body, targetUrl!!)
+      }
+    }
+    return mobiles.map { mobile ->
+      SendResult().also {
+        it.success = true
+        it.description = "success"
+        it.mobile = mobile
+        it.content = content
+        it.templateId = template.templateId
+      }
+    }
+  }
+
+  private suspend fun sendByVertxWebclient(body: Map<String, Any>, targetUrl: String) {
+    val response = vertxWebClient.postAbs(targetUrl).sendJson(body).await()
+    log.debug("response: {}", response.bodyAsString())
+  }
+
+  private suspend fun sendBySpringWebclient(body: Map<String, Any>, targetUrl: String) {
+    val result = springWebClient.post().uri(targetUrl)
+      .contentType(MediaType.APPLICATION_JSON)
+      .body(BodyInserters.fromValue(body))
+      .exchangeToMono { it.bodyToMono(String::class.java) }
+      .await()
+    log.debug("response: {}", result)
   }
 }

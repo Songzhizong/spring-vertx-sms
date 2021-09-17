@@ -22,7 +22,10 @@ fun <T : Any> String.parseJsonList(clazz: KClass<T>): List<T> =
 suspend fun <T> Mono<T>.await(): T {
   return suspendCancellableCoroutine { cont: CancellableContinuation<T> ->
     doOnNext { cont.resume(it as T) }
-      .doOnError { cont.resumeWithException(it) }
+      .onErrorResume {
+        cont.resumeWithException(it)
+        Mono.empty()
+      }
       .subscribe()
   }
 }
@@ -31,7 +34,10 @@ suspend fun <T> Flux<T>.await(): List<T> {
   return suspendCancellableCoroutine { cont: CancellableContinuation<List<T>> ->
     collectList()
       .doOnNext { cont.resume(it.map { t: T -> t }) }
-      .doOnError { cont.resumeWithException(it) }
+      .onErrorResume {
+        cont.resumeWithException(it)
+        Mono.empty()
+      }
       .subscribe()
   }
 }
