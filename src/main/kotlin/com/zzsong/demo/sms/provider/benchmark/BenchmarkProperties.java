@@ -1,9 +1,10 @@
 package com.zzsong.demo.sms.provider.benchmark;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * 基准测试配置信息
@@ -14,19 +15,19 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("sms.provider.benchmark")
 public class BenchmarkProperties {
   /** 运行基准测试采用的http客户端 */
-  @NotNull
+  @Nonnull
   private HttpClient clientType = HttpClient.VERTX;
 
   /** 目标服务地址 */
   @Nullable
   private String targetUrl;
 
-  @NotNull
+  @Nonnull
   public HttpClient getClientType() {
     return clientType;
   }
 
-  public void setClientType(@NotNull HttpClient clientType) {
+  public void setClientType(@Nonnull HttpClient clientType) {
     this.clientType = clientType;
   }
 

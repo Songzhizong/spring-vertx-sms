@@ -1,6 +1,6 @@
 package com.zzsong.demo.sms.application.args;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * @author 宋志宗 on 2021/9/15

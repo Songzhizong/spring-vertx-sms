@@ -3,8 +3,8 @@ package com.zzsong.demo.sms.provider.aliyun;
 import cn.idealframework.json.JsonUtils;
 import cn.idealframework.lang.Joiner;
 import cn.idealframework.util.Asserts;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.net.URLEncoder;
@@ -38,11 +38,11 @@ public final class AliYunSmsUtils {
    * @return 请求URL
    * @author 宋志宗 on 2021/9/15
    */
-  @NotNull
-  public static String createUrl(@NotNull String templateCode,
-                                 @NotNull Collection<String> mobiles,
-                                 @NotNull Map<String, String> args,
-                                 @NotNull AliYunProperties properties) throws Exception {
+  @Nonnull
+  public static String createUrl(@Nonnull String templateCode,
+                                 @Nonnull Collection<String> mobiles,
+                                 @Nonnull Map<String, String> args,
+                                 @Nonnull AliYunProperties properties) throws Exception {
     String baseUrl = properties.getBaseUrl();
     String regionId = properties.getRegionId();
     String signName = properties.getSignName();
@@ -89,7 +89,7 @@ public final class AliYunSmsUtils {
     return baseUrl + "?Signature=" + signature + sortQueryStringTmp;
   }
 
-  @NotNull
+  @Nonnull
   private static String specialUrlEncode(String value) throws Exception {
     return URLEncoder.encode(value, "UTF-8")
       .replace("+", "%20")
@@ -97,8 +97,8 @@ public final class AliYunSmsUtils {
       .replace("%7E", "~");
   }
 
-  private static String sign(@NotNull String accessSecret,
-                             @NotNull String stringToSign) throws Exception {
+  private static String sign(@Nonnull String accessSecret,
+                             @Nonnull String stringToSign) throws Exception {
     Mac mac = Mac.getInstance("HmacSHA1");
     mac.init(new SecretKeySpec(accessSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA1"));
     byte[] signData = mac.doFinal(stringToSign.getBytes(StandardCharsets.UTF_8));

@@ -1,7 +1,8 @@
 package com.zzsong.demo.sms.provider.aliyun;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author 宋志宗 on 2021/7/29
@@ -24,7 +25,8 @@ public class AliYunResponse {
   @JsonProperty("Code")
   private String code;
 
-  public @Nullable String getRequestId() {
+  @Nullable
+  public String getRequestId() {
     return requestId;
   }
 
@@ -32,7 +34,8 @@ public class AliYunResponse {
     this.requestId = requestId;
   }
 
-  public @Nullable String getMessage() {
+  @Nullable
+  public String getMessage() {
     return message;
   }
 
@@ -40,7 +43,8 @@ public class AliYunResponse {
     this.message = message;
   }
 
-  public @Nullable String getBizId() {
+  @Nullable
+  public String getBizId() {
     return bizId;
   }
 
@@ -48,7 +52,8 @@ public class AliYunResponse {
     this.bizId = bizId;
   }
 
-  public @Nullable String getCode() {
+  @Nullable
+  public String getCode() {
     return code;
   }
 

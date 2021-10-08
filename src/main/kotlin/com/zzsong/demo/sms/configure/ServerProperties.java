@@ -1,9 +1,10 @@
 package com.zzsong.demo.sms.configure;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author 宋志宗 on 2021/9/15
@@ -12,27 +13,29 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("sms")
 public class ServerProperties {
 
-  @NotNull
+  @Nonnull
   @NestedConfigurationProperty
   private ProviderProperties provider = new ProviderProperties();
 
-  @NotNull
+  @Nonnull
   @NestedConfigurationProperty
   private DatasourceProperties datasource = new DatasourceProperties();
 
-  public @NotNull ProviderProperties getProvider() {
+  @Nonnull
+  public ProviderProperties getProvider() {
     return provider;
   }
 
-  public void setProvider(@NotNull ProviderProperties provider) {
+  public void setProvider(@Nonnull ProviderProperties provider) {
     this.provider = provider;
   }
 
-  public @NotNull DatasourceProperties getDatasource() {
+  @Nonnull
+  public DatasourceProperties getDatasource() {
     return datasource;
   }
 
-  public void setDatasource(@NotNull DatasourceProperties datasource) {
+  public void setDatasource(@Nonnull DatasourceProperties datasource) {
     this.datasource = datasource;
   }
 }
