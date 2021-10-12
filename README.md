@@ -16,11 +16,7 @@ spring-vertx-sms是一个由 **vert.x + kotlin协程 + spring boot** 构建的�
 
 ## 快速开始
 
-> [ideal-framework](https://github.com/Songzhizong/ideal-framework)
->
-> [ideal-boot](https://github.com/Songzhizong/ideal-boot-project)
->
-> 在开始之前先将上面两个工程clone到本地并打包到maven仓库
+> 在开始之前先将 [ideal-framework](https://github.com/Songzhizong/ideal-framework) clone到本地并打包到maven仓库
 
 ### 1. 创建数据库
 
