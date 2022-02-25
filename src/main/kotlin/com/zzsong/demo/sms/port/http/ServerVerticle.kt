@@ -106,8 +106,7 @@ class ServerVerticle : CoroutineVerticle() {
     router.post("/template/provider")
       .handler(BodyHandler.create())
       .handler { ctx -> ctx.launch { routerHandler.createProviderTemplate(ctx) } }
-
-    val config = context.config()
+    val config = vertx.orCreateContext.config()
     val port = config.getInteger(SERVER_PORT_CONF, 8080)
     vertx.createHttpServer().requestHandler(router).listen(port).await()
     log.info("HTTP server started on port {}", port)
